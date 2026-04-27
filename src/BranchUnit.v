@@ -24,10 +24,13 @@ module BranchUnit (
     };
 
     always @(*) begin
-        branch_taken  = 1'b0;
+        branch_taken  = 1'b0; 
         branch_target = pc_ex + 32'd4;
 
-        //TODO: Implementar lógica do BEQ aqui!!!
+        if (opcode == BEQ && rs1_value == rs2_value) begin
+            branch_taken  = 1'b1;
+            branch_target = pc_ex + branch_imm;
+        end
     end
 
 endmodule
