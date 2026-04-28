@@ -64,12 +64,21 @@ module tb_RISCVCPU;
             cpu.DMemory[0] = 32'd10;
 
             cpu.IMemory[0] = 32'h00002083;  // lw   x1, 0(x0)      # x1 = mem[0]
+            cpu.IMemory[i] = 32'h0000_0013; // nop
+            cpu.IMemory[i] = 32'h0000_0013; // nop
+
             cpu.IMemory[1] = 32'h00508113;  // addi x2, x1, 5      # x2 = x1 + 5
+            cpu.IMemory[4]  = 32'h00000013; // nop
+
             cpu.IMemory[2] = 32'h00110193; // addi x3, x2, 1       # x3 = x2 + 1
+            cpu.IMemory[4]  = 32'h00000013; // nop
+
             cpu.IMemory[3] = 32'h00302223; // sw   x3, 4(x0)       # mem[1] = x3
             cpu.IMemory[4] = 32'h00a18213; // addi x4, x3, 10      # x4 = x3 + 10
-            // PC do beq = 20, label está em PC = 32
-            // offset = 32 - 20 = 12 bytes
+            cpu.IMemory[4]  = 32'h00000013; // nop
+
+            // PC do beq = 40, label está em PC = 52
+            // offset = 52 - 40 = 12 bytes
             cpu.IMemory[5] = 32'h00420663; // beq  x4, x4, label   # sempre tomado
 
             cpu.IMemory[6] = 32'h06300293; // addi x5, x0, 99      # deve ser flushado
