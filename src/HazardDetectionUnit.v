@@ -24,8 +24,9 @@ module HazardDetectionUnit (
         // Load-use hazard:
         // If the instruction in EX/MEM is a load and the instruction in ID/EX
         // uses its destination register, the pipeline must stall one cycle.
-
-        // TODO: Implementar a lógica para detectar hazard causado por load aqui!!!
+        if ((exmem_op == LW) && (exmem_rd != 5'd0) && ((exmem_rd == idex_rs1) || (exmem_rd == idex_rs2))) begin
+            stall = 1'b1;
+        end
 
     end
 
