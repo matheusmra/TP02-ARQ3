@@ -28,8 +28,36 @@ module ForwardingUnit (
         forwardA = NO_FORWARD;
         forwardB = NO_FORWARD;
 
-        // TODO: implementar lógica do forwarding para operando A aqui!!!
-        // TODO: implementar lógica do forwarding para operando B aqui!!!
+        // ── Operando A (rs1) ─────────────────────────────────────────────
+
+        // 3a prioridade: WB via Load
+        if (memwb_rd == idex_rs1 && memwb_rd != 5'b0 && memwb_op == LW)
+            forwardA = FROM_WB_LD;
+
+        // 2a prioridade: WB via ALU
+        if (memwb_rd == idex_rs1 && memwb_rd != 5'b0 && memwb_op == ALUop)
+            forwardA = FROM_WB_ALU;
+
+        // 1a prioridade: MEM (sobrescreve tudo — valor mais recente)
+        if (exmem_rd == idex_rs1 && exmem_rd != 5'b0 &&
+            (exmem_op == ALUop || exmem_op == LW))
+            forwardA = FROM_MEM;
+
+        // ── Operando B (rs2) ─────────────────────────────────────────────
+
+        // 3a prioridade: WB via Load
+        if (memwb_rd == idex_rs2 && memwb_rd != 5'b0 && memwb_op == LW)
+            forwardB = FROM_WB_LD;
+
+        // 2a prioridade: WB via ALU
+        if (memwb_rd == idex_rs2 && memwb_rd != 5'b0 && memwb_op == ALUop)
+            forwardB = FROM_WB_ALU;
+
+        // 1a prioridade: MEM (sobrescreve tudo — valor mais recente)
+        if (exmem_rd == idex_rs2 && exmem_rd != 5'b0 &&
+            (exmem_op == ALUop || exmem_op == LW))
+            forwardB = FROM_MEM;
+
     end
 
 endmodule
